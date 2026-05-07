@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CAPStudy — Civil Air Patrol Cadet Achievement Test practice</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Free CAP cadet Achievement Test practice quiz generator. Pick your current achievement (Curry through Spaatz), choose Leadership Lab or Aerospace Education, get 10 fresh practice questions with explanations.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://capstudy.freshskyai.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="CAPStudy — Cadet Achievement Test practice">
+  <meta property="og:description" content="Free CAP cadet Achievement Test practice quiz generator. Pick your achievement, get 10 questions with explanations.">
+  <meta property="og:url" content="https://capstudy.freshskyai.com/">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎓%3C/text%3E%3C/svg%3E">
+  <style>
+    :root {
+      --fg:#0f172a; --bg:#f8fafc; --card:#fff; --accent:#1e3a8a; --accent-hover:#1e40af;
+      --gold:#fbbf24; --border:#e2e8f0; --muted:#475569; --good:#15803d; --bad:#b91c1c;
+    }
+    * { box-sizing:border-box; }
+    body { font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--fg); margin:0; padding:0; line-height:1.55; }
+    .topbar { background:#0f172a; color:#f1f5f9; padding:12px 18px; display:flex; justify-content:space-between; align-items:center; font-size:14px; border-bottom:3px solid var(--gold); }
+    .topbar a { color:var(--gold); text-decoration:none; font-weight:600; }
+    header { text-align:center; padding:36px 20px 20px; }
+    header h1 { margin:0; font-size:30px; letter-spacing:-0.01em; }
+    header .tag { display:inline-block; background:#dbeafe; color:var(--accent); font-size:12px; font-weight:700; padding:4px 10px; border-radius:99px; margin-bottom:10px; letter-spacing:0.05em; text-transform:uppercase; }
+    header p { color:var(--muted); max-width:640px; margin:14px auto 0; font-size:16px; }
+    main { max-width:780px; margin:0 auto; padding:14px 16px 80px; }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:22px; margin-bottom:18px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+    .card h2 { margin:0 0 8px; font-size:18px; }
+    .card .sub { font-size:13px; color:var(--muted); margin-bottom:14px; }
+    label { display:block; font-weight:600; margin-bottom:8px; font-size:14px; }
+    select, input[type=number] { width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:8px; font:inherit; font-size:14.5px; background:#fff; }
+    .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; }
+    .seg { display:flex; gap:0; border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+    .seg button { flex:1; background:#fff; border:none; padding:11px 10px; font:inherit; font-size:14px; cursor:pointer; color:var(--muted); }
+    .seg button.active { background:var(--accent); color:#fff; font-weight:600; }
+    button.primary { background:var(--accent); color:#fff; padding:13px 22px; font-weight:600; font-size:15px; border:none; border-radius:10px; cursor:pointer; margin-top:14px; }
+    button.primary:hover { background:var(--accent-hover); }
+    button.primary:disabled { opacity:.5; cursor:not-allowed; }
+    .error { color:#991b1b; background:#fef2f2; padding:12px; border-radius:8px; margin-top:12px; display:none; border:1px solid #fecaca; }
+    .error.shown { display:block; }
+    .spin { display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top-color:transparent; border-radius:50%; animation:s 0.8s linear infinite; margin-right:8px; vertical-align:-2px; }
+    @keyframes s { to { transform:rotate(360deg); } }
+
+    #quiz { display:none; }
+    #quiz.shown { display:block; }
+    .progress { display:flex; align-items:center; gap:10px; margin-bottom:18px; font-size:14px; color:var(--muted); }
+    .progress-bar { flex:1; height:8px; background:#e2e8f0; border-radius:99px; overflow:hidden; }
+    .progress-bar > div { height:100%; background:var(--accent); transition:width 0.3s; }
+    .question { background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:18px 20px; }
+    .question .topic { display:inline-block; background:#1e3a8a; color:#fff; font-size:11px; padding:3px 9px; border-radius:99px; font-weight:600; letter-spacing:0.04em; text-transform:uppercase; margin-bottom:10px; }
+    .question .qtext { font-size:16.5px; line-height:1.55; margin-bottom:14px; font-weight:500; }
+    .choices { display:flex; flex-direction:column; gap:8px; }
+    .choice { display:flex; align-items:flex-start; gap:10px; background:#fff; border:1px solid var(--border); padding:11px 14px; border-radius:8px; cursor:pointer; font-size:15px; line-height:1.5; transition:background 0.15s; }
+    .choice:hover { background:#f1f5f9; }
+    .choice.selected { background:#dbeafe; border-color:var(--accent); }
+    .choice.correct { background:#dcfce7; border-color:var(--good); }
+    .choice.wrong { background:#fee2e2; border-color:var(--bad); }
+    .choice .letter { font-weight:700; min-width:18px; }
+    .explain { background:#f1f5f9; border-radius:8px; padding:14px 16px; margin-top:14px; font-size:14.5px; line-height:1.55; display:none; }
+    .explain.shown { display:block; }
+    .explain strong { color:var(--accent); }
+    .nav-row { display:flex; gap:10px; margin-top:18px; justify-content:space-between; }
+    .nav-row button { flex:1; }
+    .summary { padding:24px; text-align:center; }
+    .summary .score { font-size:48px; font-weight:700; color:var(--accent); }
+    .summary .out-of { font-size:18px; color:var(--muted); }
+    .summary .verdict { margin-top:14px; font-size:17px; font-weight:600; }
+    .summary .verdict.pass { color:var(--good); }
+    .summary .verdict.try-again { color:var(--bad); }
+
+    footer { border-top:1px solid var(--border); margin-top:40px; padding:24px 20px; text-align:center; font-size:12.5px; color:var(--muted); line-height:1.7; }
+    footer a { color:#475569; text-decoration:underline; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <span><strong>🎓 CAPStudy</strong> &middot; CAP cadet Achievement Test prep · Free</span>
+    <a href="https://cap.freshskyai.com/" target="_blank" rel="noopener">More CAP tools →</a>
+  </div>
+
+  <header>
+    <span class="tag">Curry → Spaatz · Leadership + Aerospace Ed</span>
+    <h1>Practice the test before you take it.</h1>
+    <p>Pick your current achievement and the subject area, get 10 fresh practice questions with explanations. Made specifically for CAP cadets and the AT cycles. Always free.</p>
+  </header>
+
+  <main>
+    <div class="card" id="setup">
+      <h2>Build my practice quiz</h2>
+      <p class="sub">Pick your current achievement + the subject area you're testing on. New questions every time — refresh for a different set.</p>
+
+      <div class="grid2">
+        <div>
+          <label for="achievement">Current Achievement</label>
+          <select id="achievement">
+            {% for a in achievements %}
+              <option value="{{ a.id }}" {% if a.id == 'curry' %}selected{% endif %}>{{ a.name }} — {{ a.rank }} (Phase {{ a.phase }})</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label>Subject area</label>
+          <div class="seg" id="subjectSeg">
+            <button type="button" data-v="leadership" class="active">Leadership Lab</button>
+            <button type="button" data-v="aerospace">Aerospace Education</button>
+          </div>
+        </div>
+        <div>
+          <label for="count">Number of questions</label>
+          <input type="number" id="count" min="3" max="15" value="10" step="1">
+        </div>
+      </div>
+
+      <button class="primary" id="goBtn" type="button">Generate quiz</button>
+      <div class="error" id="err"></div>
+    </div>
+
+    <div class="card" id="quiz" aria-live="polite">
+      <div id="quizBody"></div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Built under the <a href="https://www.freshskyai.com/#hulec" target="_blank" rel="noopener">HULEC rule</a>. Part of <a href="https://cap.freshskyai.com/" target="_blank" rel="noopener">Fresh Sky AI for Civil Air Patrol</a> — free, volunteer-built, no contract.</p>
+    <p>Practice questions are AI-generated study aids, not actual NHQ test items. Not affiliated with Civil Air Patrol or CAP NHQ.</p>
+  </footer>
+
+<script>
+(function () {
+  const $ = (id) => document.getElementById(id);
+  let subject = 'leadership';
+  let questions = [];
+  let answers = []; // user's chosen index per question, or null
+  let cur = 0;     // current question index
+
+  // Subject toggle
+  document.querySelectorAll('#subjectSeg button').forEach(b => {
+    b.onclick = () => {
+      document.querySelectorAll('#subjectSeg button').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      subject = b.getAttribute('data-v');
+    };
+  });
+
+  function showErr(msg) { $('err').textContent = msg; $('err').classList.add('shown'); }
+  function clearErr() { $('err').classList.remove('shown'); }
+
+  $('goBtn').onclick = async () => {
+    clearErr();
+    const achievement = $('achievement').value;
+    const count = parseInt($('count').value || '10', 10);
+    $('goBtn').disabled = true;
+    $('goBtn').innerHTML = '<span class="spin"></span>Generating quiz…';
+    try {
+      const r = await fetch('/api/quiz', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ achievement, subject, count }),
+      });
+      const j = await r.json();
+      if (!r.ok) { showErr(j.error || 'Server error.'); return; }
+      questions = j.quiz.questions || [];
+      if (!questions.length) { showErr('No questions returned. Try again.'); return; }
+      answers = new Array(questions.length).fill(null);
+      cur = 0;
+      $('quiz').classList.add('shown');
+      renderCur();
+      $('quiz').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (e) {
+      showErr('Network error: ' + (e.message || e));
+    } finally {
+      $('goBtn').disabled = false;
+      $('goBtn').textContent = 'Generate quiz';
+    }
+  };
+
+  function renderCur() {
+    const q = questions[cur];
+    const total = questions.length;
+    const pct = ((cur + 1) / total) * 100;
+    const choicesHtml = q.choices.map((c, i) => {
+      const letter = String.fromCharCode(65 + i);
+      const text = c.replace(/^[A-D]\.?\s*/, '');
+      const sel = answers[cur];
+      let cls = 'choice';
+      if (sel != null) {
+        if (i === q.correct_index) cls += ' correct';
+        else if (i === sel) cls += ' wrong';
+      }
+      return `<div class="${cls}" data-i="${i}"><span class="letter">${letter}.</span><span>${esc(text)}</span></div>`;
+    }).join('');
+
+    $('quizBody').innerHTML = `
+      <div class="progress">
+        <span>Question ${cur + 1} of ${total}</span>
+        <div class="progress-bar"><div style="width:${pct}%"></div></div>
+      </div>
+      <div class="question">
+        ${q.topic ? `<span class="topic">${esc(q.topic)}</span>` : ''}
+        <div class="qtext">${esc(q.q)}</div>
+        <div class="choices">${choicesHtml}</div>
+        <div class="explain ${answers[cur] != null ? 'shown' : ''}">
+          <strong>${answers[cur] === q.correct_index ? '✓ Correct.' : (answers[cur] != null ? '✗ Not quite.' : '')}</strong>
+          ${answers[cur] != null ? esc(q.explanation) : ''}
+        </div>
+      </div>
+      <div class="nav-row">
+        <button class="primary" id="prevBtn" ${cur === 0 ? 'disabled' : ''}>← Previous</button>
+        ${cur < total - 1
+          ? '<button class="primary" id="nextBtn">Next →</button>'
+          : '<button class="primary" id="finishBtn">Finish &amp; see score</button>'}
+      </div>
+    `;
+    $('quizBody').querySelectorAll('.choice').forEach(el => {
+      el.onclick = () => {
+        if (answers[cur] != null) return; // locked once answered
+        answers[cur] = parseInt(el.getAttribute('data-i'), 10);
+        renderCur();
+      };
+    });
+    if ($('prevBtn')) $('prevBtn').onclick = () => { cur = Math.max(0, cur - 1); renderCur(); };
+    if ($('nextBtn')) $('nextBtn').onclick = () => { cur = Math.min(questions.length - 1, cur + 1); renderCur(); };
+    if ($('finishBtn')) $('finishBtn').onclick = renderSummary;
+  }
+
+  function renderSummary() {
+    const total = questions.length;
+    let correct = 0;
+    questions.forEach((q, i) => { if (answers[i] === q.correct_index) correct += 1; });
+    const pct = Math.round((correct / total) * 100);
+    const pass = pct >= 80; // CAP AT pass threshold is 80%
+    $('quizBody').innerHTML = `
+      <div class="summary">
+        <div class="score">${correct}<span class="out-of">/${total}</span></div>
+        <div class="verdict ${pass ? 'pass' : 'try-again'}">
+          ${pct}% — ${pass ? '✓ Above the 80% pass threshold.' : 'Below the 80% pass threshold. Re-study and try again.'}
+        </div>
+        <button class="primary" style="margin-top:18px;" type="button" id="reviewBtn">Review every question</button>
+        <button class="primary" style="margin-top:8px;background:#fff;color:var(--accent);border:1px solid var(--accent)" type="button" id="newBtn">Generate a new quiz</button>
+      </div>
+    `;
+    $('reviewBtn').onclick = () => { cur = 0; renderCur(); };
+    $('newBtn').onclick = () => { $('quiz').classList.remove('shown'); $('setup').scrollIntoView({ behavior: 'smooth' }); };
+  }
+
+  function esc(s) {
+    if (s == null) return '';
+    return String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  }
+})();
+</script>
+</body>
+</html>
